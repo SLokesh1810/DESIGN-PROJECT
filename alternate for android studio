@@ -1,0 +1,107 @@
+Option 1: Use Expo Go on a Physical Device
+
+This is the easiest and fastest option. Expo Go is an app available for both Android and iOS devices that allows you to preview your React Native project without needing an emulator. Here's how you can use it:
+
+    Install Expo Go on your phone:
+        Android: Go to Google Play Store and search for Expo Go, then install it.
+        iOS: Go to Apple App Store and search for Expo Go, then install it.
+
+    Run your app on the phone:
+        Open Command Prompt in your project folder and run the following:
+
+        expo start
+
+        This will open a page in your browser that shows a QR code.
+        Open Expo Go on your phone, scan the QR code from your computer, and the app will run directly on your physical device.
+
+This is the simplest method, and it doesn't require any additional software or complex setup.
+Option 2: Use Visual Studio Code with React Native Web (For Web Browsers)
+
+If you want to run your app on the web (i.e., in a browser), you can use React Native for Web. This allows you to use your React Native code in a web browser instead of on a physical or virtual mobile device.
+
+Here’s how to run your app on the web:
+
+    Set up React Native Web:
+        In your project folder, install the necessary dependencies:
+
+    npm install react-native-web react-dom react-scripts
+
+Edit App.js for Web Compatibility:
+
+    Make sure your app's components are compatible with both mobile and web environments. Expo has built-in support for React Native Web, so most of your components should work without changes.
+
+Run the app on the web:
+
+    In your project folder, run:
+
+        expo start --web
+
+        This will open the app in your web browser.
+
+Using this method, your app will be accessible through a browser on your PC, and you won’t need an emulator or physical device.
+Option 3: Use Genymotion Emulator (No Android Studio)
+
+Genymotion is a popular third-party Android emulator that can be used as an alternative to Android Studio. It's lighter and simpler to use, especially for testing React Native apps.
+Steps to Set Up Genymotion:
+
+    Download Genymotion:
+        Go to Genymotion download page and download the installer for Windows.
+        You will need to create a Genymotion account (free for personal use).
+
+    Install VirtualBox:
+        Genymotion requires VirtualBox to run Android emulators.
+        Download and install VirtualBox from here.
+
+    Install Genymotion:
+        After installing VirtualBox, run the Genymotion installer.
+        Follow the installation instructions to complete the setup.
+
+    Create an Android Virtual Device (AVD):
+        Open Genymotion.
+        Click on "Add" to create a new virtual device (choose the device you want to emulate, such as a Pixel phone).
+
+    Connect Genymotion to Expo:
+        After the virtual device starts, you can use the emulator to test your app. In the Command Prompt where your project is located, run:
+
+        expo start --android
+
+        This will launch your app on the Genymotion emulator.
+
+Option 4: Use WSL (Windows Subsystem for Linux) with React Native CLI
+
+If you're comfortable with the command line and want a more advanced setup, you can use WSL (Windows Subsystem for Linux) along with React Native CLI to set up a development environment for React Native. This will allow you to use native Android emulators, build apps, and work with the full React Native toolchain on Windows.
+Steps to Set Up WSL for React Native:
+
+    Install WSL:
+        Open PowerShell as an Administrator and run the following command to install WSL:
+
+    wsl --install
+
+    Once installed, you'll be prompted to restart your computer.
+
+Install Linux Distro:
+
+    After rebooting, open Microsoft Store, search for a Linux distribution (such as Ubuntu) and install it.
+
+Set Up React Native Environment on WSL:
+
+    Once the Linux distro is set up, open the WSL terminal and install Node.js and npm by running:
+
+    sudo apt update
+    sudo apt install nodejs npm
+
+Install Android SDK and Set Up Emulator:
+
+    Inside WSL, you'll need to install the Android SDK (just like you would on a Mac or Linux system) and set up an emulator. This process can be a bit complicated, so be sure to refer to React Native's documentation for setting up on Linux.
+
+Run React Native App:
+
+    After setting up, you can use React Native CLI to run your app with:
+
+        npx react-native run-android
+
+        This will launch the app on your emulator or connected Android device.
+
+Option 5: Use PhoneGap / Cordova for Web-based Apps
+
+If you're interested in a web-based version of your app, you can explore other frameworks like PhoneGap or Cordova for deploying mobile apps directly from web technologies. However, this requires learning about those specific tools.
