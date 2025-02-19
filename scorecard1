@@ -1,0 +1,448 @@
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Animated } from 'react-native';
+import { MaterialIcons, FontAwesome5, Ionicons } from '@expo/vector-icons';
+
+const ScoreInput = ({ label, value, onUpdate, isCard }) => (
+  <View style={styles.scoreInputContainer}>
+    <Text style={styles.scoreLabel}>{label}</Text>
+    <View style={styles.scoreControls}>
+      <TouchableOpacity 
+        onPress={() => onUpdate(Math.max(0, Number(value) - 1))}
+        style={[styles.scoreButton, isCard && { backgroundColor: label === 'Red Cards' ? '#ffebee' : '#fff9c4' }]}
+      >
+        <MaterialIcons name="remove" size={20} color={isCard ? (label === 'Red Cards' ? '#d32f2f' : '#f57f17') : "#FF4B4B"} />
+      </TouchableOpacity>
+      <Text style={[styles.scoreValue, isCard && { color: label === 'Red Cards' ? '#d32f2f' : '#f57f17' }]}>{value}</Text>
+      <TouchableOpacity 
+        onPress={() => onUpdate(Number(value) + 1)}
+        style={[styles.scoreButton, isCard && { backgroundColor: label === 'Red Cards' ? '#ffebee' : '#fff9c4' }]}
+      >
+        <MaterialIcons name="add" size={20} color={isCard ? (label === 'Red Cards' ? '#d32f2f' : '#f57f17') : "#4CAF50"} />
+      </TouchableOpacity>
+    </View>
+  </View>
+);
+
+const SportCard = ({ sport, icon, onPress, isSelected }) => {
+  const scale = useState(new Animated.Value(1))[0];
+
+  const animatePress = () => {
+    Animated.sequence([
+      Animated.timing(scale, {
+        toValue: 0.95,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(scale, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
+  const handlePress = () => {
+    animatePress();
+    onPress();
+  };
+
+  return (
+    <Animated.View style={{ transform: [{ scale }] }}>
+      <TouchableOpacity 
+        style={[styles.sportCard, isSelected && styles.selectedSport]} 
+        onPress={handlePress}
+        activeOpacity={0.7}
+      >
+        {icon}
+        <Text style={[styles.sportText, isSelected && styles.selectedSportText]}>
+          {sport}
+        </Text>
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
+
+const PlayerCard = ({ player, sport, onUpdateScore }) => {
+  const [showFouls, setShowFouls] = useState(false);
+
+  const getScoreInputs = () => {
+    switch (sport) {
+      case 'Football':
+        return (
+          <View style={styles.scoreContainer}>
+            <ScoreInput 
+              label="Goals" 
+              value={player.goals} 
+              onUpdate={(value) => onUpdateScore(player.id, 'goals', value)} 
+            />
+            <ScoreInput 
+              label="Assists" 
+              value={player.assists}
+              onUpdate={(value) => onUpdateScore(player.id, 'assists', value)} 
+            />
+            <TouchableOpacity 
+              style={styles.foulToggle}
+              onPress={() => setShowFouls(!showFouls)}
+            >
+              <Text style={styles.foulToggleText}>Fouls</Text>
+              <MaterialIcons 
+                name={showFouls ? "expand-less" : "expand-more"} 
+                size={24} 
+                color="#666" 
+              />
+            </TouchableOpacity>
+            {showFouls && (
+              <View style={styles.cardContainer}>
+                <ScoreInput 
+                  label="Yellow Cards" 
+                  value={player.yellowCards}
+                  onUpdate={(value) => onUpdateScore(player.id, 'yellowCards', value)}
+                  isCard={true}
+                />
+                <ScoreInput 
+                  label="Red Cards" 
+                  value={player.redCards}
+                  onUpdate={(value) => onUpdateScore(player.id, 'redCards', value)}
+                  isCard={true}
+                />
+              </View>
+            )}
+          </View>
+        );
+      case 'Basketball':
+        return (
+          <View style={styles.scoreContainer}>
+            <ScoreInput 
+              label="Points" 
+              value={player.points} 
+              onUpdate={(value) => onUpdateScore(player.id, 'points', value)} 
+            />
+            <ScoreInput 
+              label="Rebounds" 
+              value={player.rebounds}
+              onUpdate={(value) => onUpdateScore(player.id, 'rebounds', value)} 
+            />
+            <TouchableOpacity 
+              style={styles.foulToggle}
+              onPress={() => setShowFouls(!showFouls)}
+            >
+              <Text style={styles.foulToggleText}>Fouls</Text>
+              <MaterialIcons 
+                name={showFouls ? "expand-less" : "expand-more"} 
+                size={24} 
+                color="#666" 
+              />
+            </TouchableOpacity>
+            {showFouls && (
+              <View style={styles.cardContainer}>
+                <ScoreInput 
+                  label="Yellow Cards" 
+                  value={player.yellowCards}
+                  onUpdate={(value) => onUpdateScore(player.id, 'yellowCards', value)}
+                  isCard={true}
+                />
+                <ScoreInput 
+                  label="Red Cards" 
+                  value={player.redCards}
+                  onUpdate={(value) => onUpdateScore(player.id, 'redCards', value)}
+                  isCard={true}
+                />
+              </View>
+            )}
+          </View>
+        );
+      case 'Cricket':
+        return (
+          <View style={styles.scoreContainer}>
+            <ScoreInput 
+              label="Runs" 
+              value={player.runs} 
+              onUpdate={(value) => onUpdateScore(player.id, 'runs', value)} 
+            />
+            <ScoreInput 
+              label="Wickets" 
+              value={player.wickets}
+              onUpdate={(value) => onUpdateScore(player.id, 'wickets', value)} 
+            />
+            <TouchableOpacity 
+              style={styles.foulToggle}
+              onPress={() => setShowFouls(!showFouls)}
+            >
+              <Text style={styles.foulToggleText}>Fouls</Text>
+              <MaterialIcons 
+                name={showFouls ? "expand-less" : "expand-more"} 
+                size={24} 
+                color="#666" 
+              />
+            </TouchableOpacity>
+            {showFouls && (
+              <View style={styles.cardContainer}>
+                <ScoreInput 
+                  label="Yellow Cards" 
+                  value={player.yellowCards}
+                  onUpdate={(value) => onUpdateScore(player.id, 'yellowCards', value)}
+                  isCard={true}
+                />
+                <ScoreInput 
+                  label="Red Cards" 
+                  value={player.redCards}
+                  onUpdate={(value) => onUpdateScore(player.id, 'redCards', value)}
+                  isCard={true}
+                />
+              </View>
+            )}
+          </View>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <View style={styles.playerCard}>
+      <View style={styles.playerHeader}>
+        <View style={styles.playerInfo}>
+          <Text style={styles.playerName}>{player.name}</Text>
+          <Text style={styles.playerNumber}>#{player.number}</Text>
+        </View>
+        <TouchableOpacity style={styles.editButton}>
+          <MaterialIcons name="edit" size={20} color="#666" />
+        </TouchableOpacity>
+      </View>
+      {getScoreInputs()}
+    </View>
+  );
+};
+
+export default function SportsScoreTracker() {
+  const [selectedSport, setSelectedSport] = useState('Football');
+  const [players, setPlayers] = useState([
+    {
+      id: 1,
+      name: 'John Doe',
+      number: '10',
+      goals: '0',
+      assists: '0',
+      points: '0',
+      rebounds: '0',
+      runs: '0',
+      wickets: '0',
+      yellowCards: '0',
+      redCards: '0'
+    },
+    {
+      id: 2,
+      name: 'Jane Smith',
+      number: '7',
+      goals: '0',
+      assists: '0',
+      points: '0',
+      rebounds: '0',
+      runs: '0',
+      wickets: '0',
+      yellowCards: '0',
+      redCards: '0'
+    }
+  ]);
+
+  const handleUpdateScore = (playerId, stat, value) => {
+    setPlayers(players.map(player => {
+      if (player.id === playerId) {
+        let updates = { ...player };
+        
+        // Special handling for yellow cards
+        if (stat === 'yellowCards') {
+          const newYellowCards = value;
+          if (newYellowCards >= 2) {
+            // Reset yellow cards and increment red card
+            updates = {
+              ...updates,
+              yellowCards: '0',
+              redCards: (parseInt(player.redCards) + 1).toString()
+            };
+            // Show alert for player being sent off
+            alert(
+              `${player.name} has received 2 yellow cards and is now out of the field with a red card.`
+            );
+          } else {
+            updates[stat] = value.toString();
+          }
+        } else {
+          updates[stat] = value.toString();
+        }
+        
+        return updates;
+      }
+      return player;
+    }));
+  };
+
+  return (
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>Sports Score Tracker</Text>
+      
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.sportsContainer}>
+        <SportCard
+          sport="Football"
+          icon={<FontAwesome5 name="football-ball" size={24} color={selectedSport === 'Football' ? '#FFF' : '#666'} />}
+          onPress={() => setSelectedSport('Football')}
+          isSelected={selectedSport === 'Football'}
+        />
+        <SportCard
+          sport="Basketball"
+          icon={<FontAwesome5 name="basketball-ball" size={24} color={selectedSport === 'Basketball' ? '#FFF' : '#666'} />}
+          onPress={() => setSelectedSport('Basketball')}
+          isSelected={selectedSport === 'Basketball'}
+        />
+        <SportCard
+          sport="Cricket"
+          icon={<MaterialIcons name="sports-cricket" size={24} color={selectedSport === 'Cricket' ? '#FFF' : '#666'} />}
+          onPress={() => setSelectedSport('Cricket')}
+          isSelected={selectedSport === 'Cricket'}
+        />
+      </ScrollView>
+
+      <View style={styles.playersContainer}>
+        {players.map(player => (
+          <PlayerCard
+            key={player.id}
+            player={player}
+            sport={selectedSport}
+            onUpdateScore={handleUpdateScore}
+          />
+        ))}
+      </View>
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F5F5F5',
+    padding: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: '#333',
+  },
+  sportsContainer: {
+    marginBottom: 20,
+  },
+  sportCard: {
+    backgroundColor: '#FFF',
+    padding: 16,
+    borderRadius: 12,
+    marginRight: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 100,
+    height: 100,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  selectedSport: {
+    backgroundColor: '#007AFF',
+  },
+  sportText: {
+    marginTop: 8,
+    color: '#666',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  selectedSportText: {
+    color: '#FFF',
+  },
+  playersContainer: {
+    gap: 16,
+  },
+  playerCard: {
+    backgroundColor: '#FFF',
+    padding: 16,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  playerHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  playerInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  playerName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+  },
+  playerNumber: {
+    fontSize: 14,
+    color: '#666',
+  },
+  editButton: {
+    padding: 8,
+  },
+  scoreContainer: {
+    gap: 12,
+  },
+  cardContainer: {
+    marginTop: 8,
+    padding: 8,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 8,
+    gap: 12,
+  },
+  scoreInputContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  scoreLabel: {
+    fontSize: 14,
+    color: '#666',
+    flex: 1,
+  },
+  scoreControls: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  scoreButton: {
+    padding: 8,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 8,
+  },
+  scoreValue: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    minWidth: 30,
+    textAlign: 'center',
+  },
+  foulToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#f5f5f5',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 8,
+  },
+  foulToggleText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#666',
+  },
+});
