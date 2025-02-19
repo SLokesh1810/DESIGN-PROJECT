@@ -1,0 +1,261 @@
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import { MaterialIcons, FontAwesome5, Ionicons } from '@expo/vector-icons';
+
+const SportCard = ({ sport, icon, onPress, isSelected }) => (
+  <TouchableOpacity 
+    style={[styles.sportCard, isSelected && styles.selectedSport]} 
+    onPress={onPress}
+  >
+    {icon}
+    <Text style={[styles.sportText, isSelected && styles.selectedSportText]}>{sport}</Text>
+  </TouchableOpacity>
+);
+
+const PlayerCard = ({ player, sport, onUpdateScore }) => {
+  const getScoreInputs = () => {
+    switch (sport) {
+      case 'Football':
+        return (
+          <View style={styles.scoreContainer}>
+            <ScoreInput 
+              label="Goals" 
+              value={player.goals} 
+              onUpdate={(value) => onUpdateScore(player.id, 'goals', value)} 
+            />
+            <ScoreInput 
+              label="Assists" 
+              value={player.assists} 
+              onUpdate={(value) => onUpdateScore(player.id, 'assists', value)} 
+            />
+          </View>
+        );
+      case 'Cricket':
+        return (
+          <View style={styles.scoreContainer}>
+            <ScoreInput 
+              label="Runs" 
+              value={player.runs} 
+              onUpdate={(value) => onUpdateScore(player.id, 'runs', value)} 
+            />
+            <ScoreInput 
+              label="Wickets" 
+              value={player.wickets} 
+              onUpdate={(value) => onUpdateScore(player.id, 'wickets', value)} 
+            />
+          </View>
+        );
+      case 'Basketball':
+        return (
+          <View style={styles.scoreContainer}>
+            <ScoreInput 
+              label="Points" 
+              value={player.points} 
+              onUpdate={(value) => onUpdateScore(player.id, 'points', value)} 
+            />
+            <ScoreInput 
+              label="Rebounds" 
+              value={player.rebounds} 
+              onUpdate={(value) => onUpdateScore(player.id, 'rebounds', value)} 
+            />
+          </View>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <View style={styles.playerCard}>
+      <View style={styles.playerHeader}>
+        <FontAwesome5 name="user-circle" size={24} color="#555" />
+        <Text style={styles.playerName}>{player.name}</Text>
+        <View style={styles.positionBadge}>
+          <Text style={styles.positionText}>{player.position}</Text>
+        </View>
+      </View>
+      {getScoreInputs()}
+    </View>
+  );
+};
+
+const ScoreInput = ({ label, value, onUpdate }) => (
+  <View style={styles.scoreInput}>
+    <Text style={styles.scoreLabel}>{label}</Text>
+    <TextInput
+      style={styles.input}
+      value={value.toString()}
+      onChangeText={(text) => onUpdate(parseInt(text) || 0)}
+      keyboardType="number-pad"
+    />
+  </View>
+);
+
+export default function ScorecardApp() {
+  const [selectedSport, setSelectedSport] = useState('Football');
+  const [players, setPlayers] = useState({
+    Football: [
+      { id: 1, name: 'John Doe', position: 'Forward', goals: 2, assists: 1 },
+      { id: 2, name: 'Jane Smith', position: 'Midfielder', goals: 1, assists: 2 },
+      { id: 3, name: 'Mike Johnson', position: 'Defender', goals: 0, assists: 1 },
+    ],
+    Cricket: [
+      { id: 1, name: 'Steve Smith', position: 'Batsman', runs: 85, wickets: 0 },
+      { id: 2, name: 'James Anderson', position: 'Bowler', runs: 12, wickets: 3 },
+      { id: 3, name: 'Ben Stokes', position: 'All-rounder', runs: 45, wickets: 2 },
+    ],
+    Basketball: [
+      { id: 1, name: 'LeBron James', position: 'Forward', points: 28, rebounds: 7 },
+      { id: 2, name: 'Stephen Curry', position: 'Guard', points: 32, rebounds: 4 },
+      { id: 3, name: 'Kevin Durant', position: 'Forward', points: 25, rebounds: 6 },
+    ],
+  });
+
+  const updatePlayerScore = (playerId, stat, value) => {
+    setPlayers(prev => ({
+      ...prev,
+      [selectedSport]: prev[selectedSport].map(player => 
+        player.id === playerId ? { ...player, [stat]: value } : player
+      )
+    }));
+  };
+
+  return (
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>Scorecard</Text>
+      
+      <View style={styles.sportSelector}>
+        <SportCard
+          sport="Football"
+          icon={<MaterialIcons name="sports-soccer" size={24} color={selectedSport === 'Football' ? '#fff' : '#333'} />}
+          onPress={() => setSelectedSport('Football')}
+          isSelected={selectedSport === 'Football'}
+        />
+        <SportCard
+          sport="Cricket"
+          icon={<MaterialIcons name="sports-cricket" size={24} color={selectedSport === 'Cricket' ? '#fff' : '#333'} />}
+          onPress={() => setSelectedSport('Cricket')}
+          isSelected={selectedSport === 'Cricket'}
+        />
+        <SportCard
+          sport="Basketball"
+          icon={<Ionicons name="basketball" size={24} color={selectedSport === 'Basketball' ? '#fff' : '#333'} />}
+          onPress={() => setSelectedSport('Basketball')}
+          isSelected={selectedSport === 'Basketball'}
+        />
+      </View>
+
+      <View style={styles.playersList}>
+        {players[selectedSport].map((player) => (
+          <PlayerCard
+            key={player.id}
+            player={player}
+            sport={selectedSport}
+            onUpdateScore={updatePlayerScore}
+          />
+        ))}
+      </View>
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+    padding: 16,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  sportSelector: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  sportCard: {
+    backgroundColor: '#fff',
+    padding: 12,
+    borderRadius: 12,
+    alignItems: 'center',
+    width: '30%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  selectedSport: {
+    backgroundColor: '#2196F3',
+  },
+  sportText: {
+    marginTop: 4,
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#333',
+  },
+  selectedSportText: {
+    color: '#fff',
+  },
+  playersList: {
+    gap: 12,
+  },
+  playerCard: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  playerHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  playerName: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 8,
+    flex: 1,
+  },
+  positionBadge: {
+    backgroundColor: '#E3F2FD',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  positionText: {
+    color: '#1976D2',
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  scoreContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 8,
+  },
+  scoreInput: {
+    flex: 1,
+    marginHorizontal: 4,
+  },
+  scoreLabel: {
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 4,
+  },
+  input: {
+    backgroundColor: '#f5f5f5',
+    borderRadius: 8,
+    padding: 8,
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+});
