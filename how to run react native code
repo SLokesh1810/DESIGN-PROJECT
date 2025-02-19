@@ -1,0 +1,56 @@
+Step 5: Replace Code in App.js
+
+    Open the project:
+        Open the scorecardApp folder using a code editor like Visual Studio Code or any editor of your choice.
+        In the project, locate the App.js file. This file contains the default template for your app.
+
+    Replace App.js content:
+        Copy the entire code that you provided and paste it into App.js, replacing the default content.
+        Your App.js file should now contain the code you provided (the scorecard app).
+
+Step 6: Start the Expo Development Server
+
+    Start the development server:
+        Go back to Command Prompt in the scorecardApp folder (where App.js is located).
+        Run the following command to start the Expo development server:
+
+        expo start
+
+    Expo development server:
+        This will open a page in your browser that displays a QR code.
+        The command prompt will also show a URL (e.g., http://localhost:19002/).
+
+Step 7: Running the App on a Physical Device (with Expo Go)
+
+    Install Expo Go on your phone:
+        On your Android or iOS phone, go to the Google Play Store or Apple App Store and search for Expo Go.
+        Install the Expo Go app.
+
+    Scan the QR code:
+        Open the Expo Go app on your phone.
+        On your computer browser (the one that shows the QR code), scan the QR code using the camera in Expo Go.
+        This will open your app on your physical device.
+
+Step 8: (Optional) Run the App on an Emulator
+
+If you want to run the app on an Android Emulator or iOS Simulator (on Windows, Android is the option), follow these steps:
+Install Android Studio and Set Up an Emulator
+
+    Download and install Android Studio:
+        Go to the Android Studio download page and install Android Studio.
+
+    Set up an Android Emulator:
+        Launch Android Studio.
+        In the welcome screen, choose "Configure" -> "AVD Manager" (Android Virtual Device).
+        Create a new virtual device (e.g., Pixel 4) and follow the setup process.
+
+    Run the app on the emulator:
+        Once the emulator is running, go back to Command Prompt and run the following command to launch the app on the emulator:
+
+        expo start --android
+
+        This will open your app in the Android Emulator.
+
+Step 9: Make Changes and Hot Reload
+
+    Make changes: As you make changes to your code in App.js, the app will automatically hot reload on the device or emulator, so you can instantly see your changes without restarting the app.
